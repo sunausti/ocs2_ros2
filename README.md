@@ -14,6 +14,7 @@ ROS2 and modern cmake. Below is the current todolist of the project:
 - [x] tinyxml2 problem in Ubuntu 24.04 ROS2 Jazzy
 - [x] raisim demo
 - [x] mpc_net demo
+- [x] docker image
 
 The IDE I used is CLion, you can follow the [guide](https://www.jetbrains.com/help/clion/ros2-tutorial.html) to set up
 the IDE.
@@ -49,8 +50,7 @@ mkdir -p ocs2_ws/src
 
 ```bash
 cd ~/ocs2_ws/src
-git clone https://github.com/legubiao/ocs2_ros2
-git submodule update --init --recursive
+git clone --recurse-submodules https://github.com/sunausti/ocs2_ros2.git
 ```
 
 * rosdep
@@ -96,3 +96,32 @@ Quick start guide:
 ![raisim_rviz](.images/raisim_rviz.png)
 
 ### 3.3 [MPC-Net](advance%20examples/ocs2_mpcnet/)
+
+## 4. Docker Image
+
+### 4.1 Docker Image build
+
+```bash
+docker build --build-arg http_proxy=$http_proxy --build-arg https_proxy=$https_proxy  -f Dockerfile -t ocs2_ros2_demo .
+```
+
+### 4.2 Run in Docker
+
+```bash
+xhost +local:root
+docker run -it --privileged -v /dev:/dev --rm     --env="DISPLAY"     --env="QT_X11_NO_MITSHM=1" \
+           --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw"  --network host \
+           -e http_proxy=$http_proxy \
+           -e https_proxy=$http_proxy \
+           -e no_proxy='localhost, 127.0.0.1' \
+           --name ocs2 \
+           ocs2_ros2_demo:latest
+```
+
+```bash
+#in docker shell
+source install/setup.bash
+
+#launch basic example
+ros2 launch ocs2_legged_robot_ros legged_robot_ddp.launch.py
+```
