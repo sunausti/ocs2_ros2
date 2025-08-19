@@ -29,6 +29,14 @@ def generate_launch_description():
             default_value='true'
         ),
         DeclareLaunchArgument(
+            name='taskFile',
+            default_value=''
+        ),
+        DeclareLaunchArgument(
+            name='debug',
+            default_value='false'
+        ),
+        DeclareLaunchArgument(
             name='urdfFile',
             default_value=''
         ),
